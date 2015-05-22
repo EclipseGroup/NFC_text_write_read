@@ -22,10 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
-
 
 public class NfcActivity extends Activity {
 
@@ -36,6 +36,7 @@ public class NfcActivity extends Activity {
     TextView tvReadDescription;
     TextView tvWriteDescription;
     ImageView ivNfcLogo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,7 @@ public class NfcActivity extends Activity {
         tvReadDescription = (TextView) findViewById(R.id.tvReadDescription);
         tvWriteDescription = (TextView) findViewById(R.id.tvWriteDescription);
         tvReadDescription.setVisibility(View.GONE);
-        ivNfcLogo = (ImageView)findViewById(R.id.ivNfc);
+        ivNfcLogo = (ImageView) findViewById(R.id.ivNfc);
 
         ivNfcLogo.setImageResource(R.drawable.nfclogo);
 
@@ -66,56 +67,57 @@ public class NfcActivity extends Activity {
             }
         });
     }
+
     /* BISOGNA DEFINIRE IL FOREGROUND DISPATCH SYSTEM TRA LA onResume() E LA onPause IN MODO TALE DI
     NON FAR RIAVVIARE L'APP AD OGNI LETTURA DI TAG */
-        @Override
-        protected void onResume () {
-            super.onResume();
-            if (nfcAdapter == null) {
-                Toast.makeText(this, "Il dispositivo non supporta gli NFC.", Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-            if (!nfcAdapter.isEnabled()) {
-                Toast.makeText(this, "NFC is not enabled please enabled NFC", Toast.LENGTH_LONG).show();
-            }
-            enableForegroundDispatchSystem();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (nfcAdapter == null) {
+            Toast.makeText(this, "Il dispositivo non supporta gli NFC.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
         }
-
-        @Override
-        protected void onPause () {
-            super.onPause();
-
-            disableForegroundDispatchSystem();
+        if (!nfcAdapter.isEnabled()) {
+            Toast.makeText(this, "NFC is not enabled please enabled NFC", Toast.LENGTH_LONG).show();
         }
+        enableForegroundDispatchSystem();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        disableForegroundDispatchSystem();
+    }
 
     /*QUESTO METODO VA AD INTERCETTARE OGNI NUOVO INTENT LANCIATO E, A SECONDA SE SI E' IN MODALITÀ SCRITTURA/LETTURA,
      VA AD INVOCARE GLI APPOSITI METODI PASSANDOGLI DEGLI NDEFMESSAGE CREATI AD HOC */
-        @Override
-        protected void onNewIntent (Intent intent){
-            super.onNewIntent(intent);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
 
-            if (intent.hasExtra(NfcAdapter.EXTRA_TAG)) {
-                Toast.makeText(this, R.string.strNfcIntent, Toast.LENGTH_SHORT).show();
+        if (intent.hasExtra(NfcAdapter.EXTRA_TAG)) {
+            Toast.makeText(this, R.string.strNfcIntent, Toast.LENGTH_SHORT).show();
 
-                if (tglReadWrite.isChecked()) {
-                    Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            if (tglReadWrite.isChecked()) {
+                Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
-                    if (parcelables != null && parcelables.length > 0) {
-                        readTextFromMessage((NdefMessage) parcelables[0]);
-                    } else {
-                        Toast.makeText(this, R.string.strNoNdefMessagesFound, Toast.LENGTH_SHORT).show();
-                    }
-
+                if (parcelables != null && parcelables.length > 0) {
+                    readTextFromMessage((NdefMessage) parcelables[0]);
                 } else {
-                    Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                    NdefMessage ndefMessage = createNdefMessage(txtTagContent.getText() + "");
-
-                    writeNdefMessage(tag, ndefMessage);
+                    Toast.makeText(this, R.string.strNoNdefMessagesFound, Toast.LENGTH_SHORT).show();
                 }
 
+            } else {
+                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                NdefMessage ndefMessage = createNdefMessage(txtTagContent.getText() + "");
+
+                writeNdefMessage(tag, ndefMessage);
             }
+
         }
+    }
 /*QUESTO METODO RICEVE IL NDEFMESSAGE CREATO DAL METODO onNewIntent() E LO SPACCHETTA IN RECORD,
 CHE INFINE CONVERTE IN STRINGHE E STAMPA A VIDEO */
 
@@ -171,13 +173,14 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
 
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, null);
     }
-// DISABILITO IL FOREGROUND DISPATCH SYSTEM
+
+    // DISABILITO IL FOREGROUND DISPATCH SYSTEM
     private void disableForegroundDispatchSystem() {
         nfcAdapter.disableForegroundDispatch(this);
     }
 
-/*METODO INVOCATO QUANDO STIAMO PER SCRIVERE SU UN TAG, SERVE PER VERIFICARE SE IL TAG È NDEFFORMATABLE,
-SE NO, STAMPA CHE NON È FORMATTABILE, SE SI, SCRIVE IL TAG*/
+    /*METODO INVOCATO QUANDO STIAMO PER SCRIVERE SU UN TAG, SERVE PER VERIFICARE SE IL TAG È NDEFFORMATABLE,
+    SE NO, STAMPA CHE NON È FORMATTABILE, SE SI, SCRIVE IL TAG*/
     private void formatTag(Tag tag, NdefMessage ndefMessage) {
         try {
 
@@ -200,6 +203,7 @@ SE NO, STAMPA CHE NON È FORMATTABILE, SE SI, SCRIVE IL TAG*/
         }
 
     }
+
     /* CONTROLLO SE IL TAG È AGGANCIATO AL DISPOSITIVO NFC E SE IL MESSAGGIO DA SCRIVERE NON È NULLO,
     ( SE E' NULLO OCCORRE RICORRERE A formatTag() )
      SUCCESSIVAMENTE INVOCO IL METODO PER SCRIVERE IL TAG, CON IL CONTROLLO PER SAPERE SE IL TAG  È SCRIVIBILE */
@@ -275,7 +279,7 @@ SE NO, STAMPA CHE NON È FORMATTABILE, SE SI, SCRIVE IL TAG*/
     }
 
 
-/*QUESTO METODO, USATO PER LA LETTURA, RICEVE UN NDEFRECORD E SALVA IL CONTENUTO IN UNA STRINGA CHE RITORNA AL METODO CHIAMANTE*/
+    /*QUESTO METODO, USATO PER LA LETTURA, RICEVE UN NDEFRECORD E SALVA IL CONTENUTO IN UNA STRINGA CHE RITORNA AL METODO CHIAMANTE*/
     public String getTextFromNdefRecord(NdefRecord ndefRecord) {
         String tagContent = null;
         try {
