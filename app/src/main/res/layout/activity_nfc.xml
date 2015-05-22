@@ -9,10 +9,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".NfcActivity">
 
+    <TextView
+        android:id="@+id/tvButtonDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/strButtonDescription"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <ToggleButton
         android:id="@+id/tglReadWrite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:onClick="tglReadWriteOnClick"
         android:textOff="@string/strWrite"
         android:textOn="@string/strRead" />
@@ -50,6 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/ivNfc"/>
+
+
 
 
 </LinearLayout>

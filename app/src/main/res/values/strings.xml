@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">NFC_text_write_read</string>
+    <string name="app_name">NFC Tag</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="strWrite"><font color="#0674bb">Write</font> / Read</string>
-    <string name="strRead">Write / <font color="#0674bb">Read</font></string>
+    <string name="strWrite">Write</string>
+    <string name="strRead">Read</string>
     <string name="strWriteDescription">Write into the box below the text that you want to insert into NFC tag then bring near your device to the tag</string>
     <string name="strReadDescription">Bring near your device to the NFC tag to read the content</string>
     <string name="strNfcIntent">NFC Intent</string>
@@ -14,4 +14,6 @@
     <string name="strTagWritten">Tag written</string>
     <string name="strTagObjectCannotBeNull">Tag object cannot be null</string>
     <string name="strTagIsNotWritable">Tag is not writable</string>
+    <string name="strButtonDescription">Click on the button for switch between Write mode and Read mode</string>
+
 </resources>

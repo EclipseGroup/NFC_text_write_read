@@ -56,6 +56,7 @@ public class NfcActivity extends Activity {
             public void onClick(View v) {
                 txtTagContent.setText("");
                 if (tglReadWrite.isChecked()) {
+
                     tvWriteDescription.setVisibility(View.GONE);
                     tvReadDescription.setVisibility(View.VISIBLE);
                 } else {
@@ -65,7 +66,8 @@ public class NfcActivity extends Activity {
             }
         });
     }
-
+    /* BISOGNA DEFINIRE IL FOREGROUND DISPATCH SYSTEM TRA LA onResume() E LA onPause IN MODO TALE DI
+    NON FAR RIAVVIARE L'APP AD OGNI LETTURA DI TAG */
         @Override
         protected void onResume () {
             super.onResume();
@@ -80,7 +82,8 @@ public class NfcActivity extends Activity {
             disableForegroundDispatchSystem();
         }
 
-
+    /*QUESTO METODO VA AD INTERCETTARE OGNI NUOVO INTENT LANCIATO E, A SECONDA SE SI E' IN MODALITÀ SCRITTURA/LETTURA,
+     VA AD INVOCARE GLI APPOSITI METODI PASSANDOGLI DEGLI NDEFMESSAGE CREATI AD HOC */
         @Override
         protected void onNewIntent (Intent intent){
             super.onNewIntent(intent);
@@ -106,6 +109,8 @@ public class NfcActivity extends Activity {
 
             }
         }
+/*QUESTO METODO RICEVE IL NDEFMESSAGE CREATO DAL METODO onNewIntent() E LO SPACCHETTA IN RECORD,
+CHE INFINE CONVERTE IN STRINGHE E STAMPA A VIDEO */
 
     private void readTextFromMessage(NdefMessage ndefMessage) {
 
@@ -146,7 +151,8 @@ public class NfcActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-
+/*ABILITO IL FOREGROUND DISPATCH PASSANDOGLI UN PENDING INTENT CHE IL S.O. PUÒ POPOLARE
+CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER FILTRARE GLI INTENT CHE VOGLIAMO INTERCETTARE */
 
     private void enableForegroundDispatchSystem() {
 
@@ -158,11 +164,13 @@ public class NfcActivity extends Activity {
 
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, null);
     }
-
+// DISABILITO IL FOREGROUND DISPATCH SYSTEM
     private void disableForegroundDispatchSystem() {
         nfcAdapter.disableForegroundDispatch(this);
     }
 
+/*METODO INVOCATO QUANDO STIAMO PER SCRIVERE SU UN TAG, SERVE PER VERIFICARE SE IL TAG È NDEFFORMATABLE,
+SE NO, STAMPA CHE NON È FORMATTABILE, SE SI, SCRIVE IL TAG*/
     private void formatTag(Tag tag, NdefMessage ndefMessage) {
         try {
 
@@ -185,7 +193,9 @@ public class NfcActivity extends Activity {
         }
 
     }
-
+    /* CONTROLLO SE IL TAG È AGGANCIATO AL DISPOSITIVO NFC E SE IL MESSAGGIO DA SCRIVERE NON È NULLO,
+    ( SE E' NULLO OCCORRE RICORRERE A formatTag() )
+     SUCCESSIVAMENTE INVOCO IL METODO PER SCRIVERE IL TAG, CON IL CONTROLLO PER SAPERE SE IL TAG  È SCRIVIBILE */
     private void writeNdefMessage(Tag tag, NdefMessage ndefMessage) {
 
         try {
@@ -246,7 +256,8 @@ public class NfcActivity extends Activity {
         return null;
     }
 
-
+    /* RICEVE LA STRINGA DA SCRIVERE SUL TAG,  TRAMITE IL METODO PRECEDENTE (CREATE TEXT RECORD)
+     CREA UN NDEFRECORD E NE ESTRAPOLA UN NDEFMESSAGE */
     private NdefMessage createNdefMessage(String content) {
 
         NdefRecord ndefRecord = createTextRecord(content);
@@ -257,7 +268,7 @@ public class NfcActivity extends Activity {
     }
 
 
-
+/*QUESTO METODO, USATO PER LA LETTURA, RICEVE UN NDEFRECORD E SALVA IL CONTENUTO IN UNA STRINGA CHE RITORNA AL METODO CHIAMANTE*/
     public String getTextFromNdefRecord(NdefRecord ndefRecord) {
         String tagContent = null;
         try {
