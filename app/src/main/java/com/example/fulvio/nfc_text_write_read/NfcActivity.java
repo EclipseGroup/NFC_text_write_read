@@ -13,6 +13,8 @@ import android.nfc.tech.NdefFormatable;
 import android.os.Parcelable;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +53,6 @@ public class NfcActivity extends Activity {
         ivNfcLogo = (ImageView) findViewById(R.id.ivNfc);
 
         ivNfcLogo.setImageResource(R.drawable.nfclogo);
-
         tglReadWrite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,6 +294,7 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
         } catch (UnsupportedEncodingException e) {
             Log.e("getTextFromNdefRecord", e.getMessage(), e);
         }
+        Toast.makeText(this,"tagContent"+tagContent.length(),Toast.LENGTH_LONG).show();
         return tagContent;
     }
 
