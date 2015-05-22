@@ -8,9 +8,9 @@
     <string name="strNfcIntent">NFC Intent</string>
     <string name="strNoNdefMessagesFound">Messaggio NDEF non trovato</string>
     <string name="strNoNdefRecordFound">Record NDEF non trovato</string>
-    <string name="strTagIsNotNdefFormatable">il tag non supporta il formato NDEF</string>
+    <string name="strTagIsNotNdefFormatable">Il tag non supporta il formato NDEF</string>
     <string name="strTagWritten">Tag Scritto</string>
-    <string name="strTagObjectCannotBeNull">L'oggetto tag non può essere nullo</string>
-    <string name="strTagIsNotWritable">Il tag non può essere scritto</string>
+    <string name="strTagObjectCannotBeNull">L\'oggetto tag non puo\' essere nullo</string>
+    <string name="strTagIsNotWritable">Il tag non puo\' essere scritto</string>
     <string name="strButtonDescription">Clicca sul bottone per cambiare tra le modalità di scrittura e lettura</string>
 </resources>
