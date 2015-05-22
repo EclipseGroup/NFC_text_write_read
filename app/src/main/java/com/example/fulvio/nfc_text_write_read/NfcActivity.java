@@ -69,7 +69,14 @@ public class NfcActivity extends Activity {
         @Override
         protected void onResume () {
             super.onResume();
-
+            if (nfcAdapter == null) {
+                Toast.makeText(this, "Il dispositivo non supporta gli NFC.", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+            if (!nfcAdapter.isEnabled()) {
+                Toast.makeText(this, "NFC is not enabled please enabled NFC", Toast.LENGTH_LONG).show();
+            }
             enableForegroundDispatchSystem();
         }
 
