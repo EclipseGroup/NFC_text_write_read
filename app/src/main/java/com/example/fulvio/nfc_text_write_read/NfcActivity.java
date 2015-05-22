@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -34,7 +35,7 @@ public class NfcActivity extends Activity {
     EditText txtTagContent;
     TextView tvReadDescription;
     TextView tvWriteDescription;
-
+    ImageView ivNfcLogo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +47,9 @@ public class NfcActivity extends Activity {
         tvReadDescription = (TextView) findViewById(R.id.tvReadDescription);
         tvWriteDescription = (TextView) findViewById(R.id.tvWriteDescription);
         tvReadDescription.setVisibility(View.GONE);
+        ivNfcLogo = (ImageView)findViewById(R.id.ivNfc);
+
+        ivNfcLogo.setImageResource(R.drawable.nfclogo);
 
         tglReadWrite.setOnClickListener(new View.OnClickListener() {
             @Override
