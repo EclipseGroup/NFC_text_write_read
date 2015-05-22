@@ -13,5 +13,5 @@
     <string name="strTagIsNotNdefFormatable">Tag is not Ndef formatable!</string>
     <string name="strTagWritten">Tag written</string>
     <string name="strTagObjectCannotBeNull">Tag object cannot be null</string>
-    <string name="strTagIsNotWritable">Tag is not writable!</string>
+    <string name="strTagIsNotWritable">Tag is not writable</string>
 </resources>
