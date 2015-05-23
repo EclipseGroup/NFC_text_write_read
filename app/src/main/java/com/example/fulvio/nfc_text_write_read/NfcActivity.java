@@ -162,8 +162,41 @@ con i dettagli del tag quando viene letto, in piu' dichiaro un intent filter per
         nfcAdapter.disableForegroundDispatch(this);
     }
 
+    /* Viene creato un NdefMessage con dentro il messaggio da scrivere all’ interno del tag,
+      il record di testo del NdefMessage viene creato dal metodo createTextRecord()
+      nella onNewIntent (metodo che invoca questa funzione) viene poi richiamata
+      la writeNdefMessage(tag, NdefMessage) passandogli appunto il tag e l’ NdefMessage	*/
 
+    private NdefMessage createNdefMessage(String content) {
 
+        NdefRecord ndefRecord = createTextRecord(content);
+
+        NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{ndefRecord});
+
+        return ndefMessage;
+    }
+
+    private NdefRecord createTextRecord(String content) {
+        try {
+            byte[] language;
+            language = Locale.getDefault().getLanguage().getBytes("UTF-8");
+
+            final byte[] text = content.getBytes("UTF-8");
+            final int languageSize = language.length;
+            final int textLength = text.length;
+            final ByteArrayOutputStream payload = new ByteArrayOutputStream(1 + languageSize + textLength);
+
+            payload.write((byte) (languageSize & 0x1F));
+            payload.write(language, 0, languageSize);
+            payload.write(text, 0, textLength);
+
+            return new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload.toByteArray());
+
+        } catch (UnsupportedEncodingException e) {
+            Log.e("createTextRecord", e.getMessage());
+        }
+        return null;
+    }
 
     /* La funzione writeNdefMessage() effettua innanzitutto un controllo sul tag,
     se esso è nullo è un caso di errore, quindi stampa un Toast di notifica e termina la funzione.
@@ -233,6 +266,8 @@ con i dettagli del tag quando viene letto, in piu' dichiaro un intent filter per
 
     }
 
+
+
     /*
     La readTextFromMessage() suddivide il messaggio NDEF in record della classe ndefRecord,
     successivamente effettua un controllo su di essi, se i record sono vuoti
@@ -257,39 +292,6 @@ con i dettagli del tag quando viene letto, in piu' dichiaro un intent filter per
         }
 
     }
-    private NdefRecord createTextRecord(String content) {
-        try {
-            byte[] language;
-            language = Locale.getDefault().getLanguage().getBytes("UTF-8");
-
-            final byte[] text = content.getBytes("UTF-8");
-            final int languageSize = language.length;
-            final int textLength = text.length;
-            final ByteArrayOutputStream payload = new ByteArrayOutputStream(1 + languageSize + textLength);
-
-            payload.write((byte) (languageSize & 0x1F));
-            payload.write(language, 0, languageSize);
-            payload.write(text, 0, textLength);
-
-            return new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload.toByteArray());
-
-        } catch (UnsupportedEncodingException e) {
-            Log.e("createTextRecord", e.getMessage());
-        }
-        return null;
-    }
-
-
-    private NdefMessage createNdefMessage(String content) {
-
-        NdefRecord ndefRecord = createTextRecord(content);
-
-        NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{ndefRecord});
-
-        return ndefMessage;
-    }
-
-
 
     public String getTextFromNdefRecord(NdefRecord ndefRecord) {
         String tagContent = null;
