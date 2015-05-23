@@ -13,6 +13,8 @@ import android.nfc.tech.NdefFormatable;
 import android.os.Parcelable;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,12 +76,12 @@ public class NfcActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if (nfcAdapter == null) {
-            Toast.makeText(this, R.string.strNfcNotSupported, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Il dispositivo non supporta gli NFC.", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
         if (!nfcAdapter.isEnabled()) {
-            Toast.makeText(this, R.string.strNfcDisabled, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "NFC is not enabled please enabled NFC", Toast.LENGTH_LONG).show();
         }
         enableForegroundDispatchSystem();
     }
@@ -293,6 +295,7 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
         } catch (UnsupportedEncodingException e) {
             Log.e("getTextFromNdefRecord", e.getMessage(), e);
         }
+
         return tagContent;
     }
 
