@@ -13,8 +13,6 @@ import android.nfc.tech.NdefFormatable;
 import android.os.Parcelable;
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,13 +63,14 @@ public class NfcActivity extends Activity {
                 } else {
                     tvReadDescription.setVisibility(View.GONE);
                     tvWriteDescription.setVisibility(View.VISIBLE);
+
                 }
             }
         });
     }
 
-    /* BISOGNA DEFINIRE IL FOREGROUND DISPATCH SYSTEM TRA LA onResume() E LA onPause IN MODO TALE DI
-    NON FAR RIAVVIARE L'APP AD OGNI LETTURA DI TAG */
+    /* Bisogna definire il foreground dispatch system tra la onresume() e la onpause in modo tale di
+    non far riavviare l'app ad ogni lettura di tag */
     @Override
     protected void onResume() {
         super.onResume();
@@ -93,8 +92,8 @@ public class NfcActivity extends Activity {
         disableForegroundDispatchSystem();
     }
 
-    /*QUESTO METODO VA AD INTERCETTARE OGNI NUOVO INTENT LANCIATO E, A SECONDA SE SI E' IN MODALITÀ SCRITTURA/LETTURA,
-     VA AD INVOCARE GLI APPOSITI METODI PASSANDOGLI DEGLI NDEFMESSAGE CREATI AD HOC */
+    /*Questo metodo va ad intercettare ogni nuovo intent lanciato e, a seconda se si e' in modalità scrittura/lettura,
+     va ad invocare gli appositi metodi passandogli degli ndefmessage creati ad hoc */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -114,32 +113,14 @@ public class NfcActivity extends Activity {
             } else {
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
                 NdefMessage ndefMessage = createNdefMessage(txtTagContent.getText() + "");
-
                 writeNdefMessage(tag, ndefMessage);
             }
 
         }
     }
-/*QUESTO METODO RICEVE IL NDEFMESSAGE CREATO DAL METODO onNewIntent() E LO SPACCHETTA IN RECORD,
-CHE INFINE CONVERTE IN STRINGHE E STAMPA A VIDEO */
 
-    private void readTextFromMessage(NdefMessage ndefMessage) {
 
-        NdefRecord[] ndefRecords = ndefMessage.getRecords();
 
-        if (ndefRecords != null && ndefRecords.length > 0) {
-
-            NdefRecord ndefRecord = ndefRecords[0];
-
-            String tagContent = getTextFromNdefRecord(ndefRecord);
-
-            txtTagContent.setText(tagContent);
-
-        } else {
-            Toast.makeText(this, R.string.strNoNdefRecordFound, Toast.LENGTH_SHORT).show();
-        }
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,8 +143,8 @@ CHE INFINE CONVERTE IN STRINGHE E STAMPA A VIDEO */
 
         return super.onOptionsItemSelected(item);
     }
-/*ABILITO IL FOREGROUND DISPATCH PASSANDOGLI UN PENDING INTENT CHE IL S.O. PUÒ POPOLARE
-CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER FILTRARE GLI INTENT CHE VOGLIAMO INTERCETTARE */
+/*Abilito il foreground dispatch passandogli un pending intent che il s.o. può popolare
+con i dettagli del tag quando viene letto, in piu' dichiaro un intent filter per filtrare gli intent che vogliamo intercettare */
 
     private void enableForegroundDispatchSystem() {
 
@@ -176,39 +157,22 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, null);
     }
 
-    // DISABILITO IL FOREGROUND DISPATCH SYSTEM
+    // Disabilito il Foreground Dispatch System
     private void disableForegroundDispatchSystem() {
         nfcAdapter.disableForegroundDispatch(this);
     }
 
-    /*METODO INVOCATO QUANDO STIAMO PER SCRIVERE SU UN TAG, SERVE PER VERIFICARE SE IL TAG È NDEFFORMATABLE,
-    SE NO, STAMPA CHE NON È FORMATTABILE, SE SI, SCRIVE IL TAG*/
-    private void formatTag(Tag tag, NdefMessage ndefMessage) {
-        try {
-
-            NdefFormatable ndefFormatable = NdefFormatable.get(tag);
-
-            if (ndefFormatable == null) {
-                Toast.makeText(this, R.string.strTagIsNotNdefFormatable, Toast.LENGTH_SHORT).show();
-                return;
-            }
 
 
-            ndefFormatable.connect();
-            ndefFormatable.format(ndefMessage);
-            ndefFormatable.close();
 
-            Toast.makeText(this, R.string.strTagWritten, Toast.LENGTH_SHORT).show();
-
-        } catch (Exception e) {
-            Log.e("formatTag", e.getMessage());
-        }
-
-    }
-
-    /* CONTROLLO SE IL TAG È AGGANCIATO AL DISPOSITIVO NFC E SE IL MESSAGGIO DA SCRIVERE NON È NULLO,
-    ( SE E' NULLO OCCORRE RICORRERE A formatTag() )
-     SUCCESSIVAMENTE INVOCO IL METODO PER SCRIVERE IL TAG, CON IL CONTROLLO PER SAPERE SE IL TAG  È SCRIVIBILE */
+    /* La funzione writeNdefMessage() effettua innanzitutto un controllo sul tag,
+    se esso è nullo è un caso di errore, quindi stampa un Toast di notifica e termina la funzione.
+    Successivamente viene effettuato un controllo sul formato del  target,
+    se Ndef.get(tag) restituisce null viene chiamata la funzione formatTag(),
+    che prova a formattare il tag, se non è formattabile in formato Ndef viene visualizzato
+    un Toast di notifica e termina la procedura di scrittura.
+    Altrimenti viene verificato se il tag è stato formattato in formato Ndef,
+    viene scritto il messaggio all’ interno del tag e viene visualizzato un altro Toast di notifica. */
     private void writeNdefMessage(Tag tag, NdefMessage ndefMessage) {
 
         try {
@@ -246,7 +210,53 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
 
     }
 
+    private void formatTag(Tag tag, NdefMessage ndefMessage) {
+        try {
 
+            NdefFormatable ndefFormatable = NdefFormatable.get(tag);
+
+            if (ndefFormatable == null) {
+                Toast.makeText(this, R.string.strTagIsNotNdefFormatable, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            ndefFormatable.connect();
+            ndefFormatable.format(ndefMessage);
+            ndefFormatable.close();
+
+            Toast.makeText(this, R.string.strTagWritten, Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Log.e("formatTag", e.getMessage());
+        }
+
+    }
+
+    /*
+    La readTextFromMessage() suddivide il messaggio NDEF in record della classe ndefRecord,
+    successivamente effettua un controllo su di essi, se i record sono vuoti
+    viene stampato un Toast NoNdefRecordFound, altrimenti grazie alla getTextFromNdefRecord(ndefRecord)
+    viene preso il testo nei record e mostrato nell’ EditText il contenuto del tag.
+    */
+
+    private void readTextFromMessage(NdefMessage ndefMessage) {
+
+        NdefRecord[] ndefRecords = ndefMessage.getRecords();
+
+        if (ndefRecords != null && ndefRecords.length > 0) {
+
+            NdefRecord ndefRecord = ndefRecords[0];
+
+            String tagContent = getTextFromNdefRecord(ndefRecord);
+
+            txtTagContent.setText(tagContent);
+
+        } else {
+            Toast.makeText(this, R.string.strNoNdefRecordFound, Toast.LENGTH_SHORT).show();
+        }
+
+    }
     private NdefRecord createTextRecord(String content) {
         try {
             byte[] language;
@@ -269,8 +279,7 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
         return null;
     }
 
-    /* RICEVE LA STRINGA DA SCRIVERE SUL TAG,  TRAMITE IL METODO PRECEDENTE (CREATE TEXT RECORD)
-     CREA UN NDEFRECORD E NE ESTRAPOLA UN NDEFMESSAGE */
+
     private NdefMessage createNdefMessage(String content) {
 
         NdefRecord ndefRecord = createTextRecord(content);
@@ -281,7 +290,7 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
     }
 
 
-    /*QUESTO METODO, USATO PER LA LETTURA, RICEVE UN NDEFRECORD E SALVA IL CONTENUTO IN UNA STRINGA CHE RITORNA AL METODO CHIAMANTE*/
+
     public String getTextFromNdefRecord(NdefRecord ndefRecord) {
         String tagContent = null;
         try {

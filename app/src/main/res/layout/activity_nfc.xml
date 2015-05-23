@@ -52,7 +52,9 @@
     <EditText
         android:id="@+id/txtTagContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="@string/strEtHint"
+        android:maxLength="135"/>
 
     <ImageView
         android:layout_width="match_parent"
