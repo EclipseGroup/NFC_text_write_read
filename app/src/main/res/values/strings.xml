@@ -16,5 +16,7 @@
     <string name="strTagObjectCannotBeNull">Tag object cannot be null</string>
     <string name="strTagIsNotWritable">Tag is not writable</string>
     <string name="strButtonDescription">Click on the button for switch between Write mode and Read mode</string>
+    <string name="strNfcDisabled">NFC is not enabled please enable NFC</string>
+    <string name="strNfcNotSupported">NFC is not supported on your devixe</string>
 
 </resources>

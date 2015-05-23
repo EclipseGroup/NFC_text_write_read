@@ -14,4 +14,6 @@
     <string name="strEtHint">Max 135 caratteri</string>
     <string name="strTagIsNotWritable">Il tag non puo\' essere scritto</string>
     <string name="strButtonDescription">Clicca sul bottone per cambiare tra le modalità di scrittura e lettura</string>
+    <string name="strNfcDisabled">NFC non abilitato, abilitare NFC</string>
+    <string name="strNfcNotSupported">NFC non è supportato dal dispositivo</string>
 </resources>
