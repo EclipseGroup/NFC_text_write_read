@@ -7,10 +7,11 @@
     <string name="strRead">Read</string>
     <string name="strWriteDescription">Write into the box below the text that you want to insert into NFC tag then bring near your device to the tag</string>
     <string name="strReadDescription">Bring near your device to the NFC tag to read the content</string>
-    <string name="strNfcIntent">NFC Intent</string>
+    <string name="strNfcIntent">NFC Tag found!</string>
     <string name="strNoNdefMessagesFound">No NDEF messages found!</string>
     <string name="strNoNdefRecordFound">No NDEF record found!</string>
     <string name="strTagIsNotNdefFormatable">Tag is not Ndef formatable!</string>
+    <string name="strEtHint">Max 135 characters</string>
     <string name="strTagWritten">Tag written</string>
     <string name="strTagObjectCannotBeNull">Tag object cannot be null</string>
     <string name="strTagIsNotWritable">Tag is not writable</string>

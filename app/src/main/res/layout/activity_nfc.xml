@@ -28,7 +28,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"/>
 
     <TextView
         android:id="@+id/tvWriteDescription"
@@ -52,7 +52,9 @@
     <EditText
         android:id="@+id/txtTagContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:maxLength="135"
+        android:hint="@string/strEtHint"/>
 
     <ImageView
         android:layout_width="match_parent"

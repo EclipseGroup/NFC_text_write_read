@@ -125,7 +125,7 @@ CHE INFINE CONVERTE IN STRINGHE E STAMPA A VIDEO */
 
         NdefRecord[] ndefRecords = ndefMessage.getRecords();
 
-        if (ndefRecords != null && ndefRecords.length > 0) {
+        if (ndefRecords.length > 0) {
 
             NdefRecord ndefRecord = ndefRecords[0];
 
@@ -218,10 +218,13 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
 
             Ndef ndef = Ndef.get(tag);
 
-            if (ndef == null) {
-                // format tag with the ndef format and writes the message.
+            if (ndef == null)
+            {
+                // FORMATTA IL TAG CON IL FORMATO NDEF E SCRIVI IL MESSAGGIO.
                 formatTag(tag, ndefMessage);
-            } else {
+            }
+            else
+            {
                 ndef.connect();
 
                 if (!ndef.isWritable()) {
@@ -293,6 +296,7 @@ CON I DETTAGLI DEL TAG QUANDO VIENE LETTO. IN PIU' DICHIARO UN INTENT FILTER PER
         } catch (UnsupportedEncodingException e) {
             Log.e("getTextFromNdefRecord", e.getMessage(), e);
         }
+
         return tagContent;
     }
 
